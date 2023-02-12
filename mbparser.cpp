@@ -183,13 +183,11 @@ void ModbusParser::_copyToken(){
 }
 
 void ModbusParser::_reverseCopyToken(){
-  Serial1.printf("pl idx: %d\n", _payloadPtr - _payloadArray);
   _swappedBytes--;
   *_payloadPtr-- = _token;
   if (_swappedBytes <= 0){
     _payloadPtr += 2 * _registerSize;
     _swappedBytes = _registerSize;
-    Serial1.printf("ptr: %p\n", _payloadPtr);
   }
   
   
