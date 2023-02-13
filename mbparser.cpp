@@ -249,6 +249,7 @@ void ModbusParser::_renderCRC() {
 }
 
 void ModbusParser::_allocatePayload() {
+  if (_payloadArray!=nullptr) _freePayload(); // ultimate when user code doesn't do.
   _payloadArray = new uint8_t[_payloadSize];
   if (_reverse){
     _payloadPtr = _payloadArray + _registerSize-1;
