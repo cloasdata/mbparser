@@ -38,6 +38,9 @@ typedef std::function<void(ModbusParser *parser)> parserCallback;
 class ModbusParser{
   public:
     ModbusParser(uint8_t slaveID);
+    ModbusParser(const ModbusParser&) = delete;
+    ModbusParser& operator= (const ModbusParser&) = delete;
+    ~ModbusParser(){_freePayload();};
     uint16_t parse(uint8_t *buffer, uint16_t len);
     uint16_t parse(uint8_t token);
     void free();
