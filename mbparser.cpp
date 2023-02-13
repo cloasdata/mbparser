@@ -31,13 +31,9 @@ In all other states class attributes may be inconsistent.
 */
 uint16_t ModbusParser::parse(uint8_t token){
   _parse(token);
-  if (currentState == _State::complete){
-    if (_onComplete) _onComplete(this);
-  } else if (currentState == _State::error) {
-    if (_onError) _onError(this);
-  }
   return currentState;
 };
+
 
 /*
 Frees payload from memory.
@@ -64,7 +60,7 @@ void ModbusParser::setOnErrorCB(parserCallback cb){
 
 
 /*
-Actual implementation of parse
+Actual implementation of parse.
 */
 void ModbusParser::_parse(uint8_t token) {
   _token = token;
@@ -74,7 +70,18 @@ void ModbusParser::_parse(uint8_t token) {
     _reset();
   }
   _renderStateMachine();
+  _handleCallbacks();
+}
 
+/*
+Calls registered callbacks. 
+*/
+void ModbusParser::_handleCallbacks(){
+  if (currentState == _State::complete){
+    if (_onComplete) _onComplete(this);
+  } else if (currentState == _State::error) {
+    if (_onError) _onError(this);
+  }
 }
 
 /*

@@ -82,6 +82,7 @@ class ModbusParser{
     uint16_t _swappedBytes;
 
     void _parse(uint8_t token);
+    void _handleCallbacks();
 
     void _renderStateMachine();
     void _checkSlaveAddress();
