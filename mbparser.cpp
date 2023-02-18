@@ -12,7 +12,7 @@ Returns the current parser state.
 Parser state and payload is only valid, when parser state is complete
 In all other states class attributes may be inconsistent.
 */
-uint16_t ModbusParser::parse(uint8_t *buffer, uint16_t len) {
+ParserState ModbusParser::parse(uint8_t *buffer, uint16_t len) {
   uint16_t index = 0;
 
   // consume all provided tokens
@@ -29,7 +29,7 @@ Returns the current parser state.
 Parser state and payload is only valid, when parser state is complete
 In all other states class attributes may be inconsistent.
 */
-uint16_t ModbusParser::parse(uint8_t token){
+ParserState ModbusParser::parse(uint8_t token){
   _parse(token);
   return currentState;
 };
@@ -66,7 +66,7 @@ void ModbusParser::_parse(uint8_t token) {
   _token = token;
   // indeed currentState is laststate until the machine is rendered.
   lastState = currentState;
-  if (lastState == _State::complete || lastState == _State::error) {
+  if (lastState == ParserState::complete || lastState == ParserState::error) {
     _reset();
   }
   _renderStateMachine();
@@ -77,9 +77,9 @@ void ModbusParser::_parse(uint8_t token) {
 Calls registered callbacks. 
 */
 void ModbusParser::_handleCallbacks(){
-  if (currentState == _State::complete){
+  if (currentState == ParserState::complete){
     if (_onComplete) _onComplete(this);
-  } else if (currentState == _State::error) {
+  } else if (currentState == ParserState::error) {
     if (_onError) _onError(this);
   }
 }
@@ -89,27 +89,27 @@ State machine
 */
 void ModbusParser::_renderStateMachine() {
   switch (currentState) {
-  case _State::slaveAddress:
+  case ParserState::slaveAddress:
     _checkSlaveAddress();
     break;
 
-  case _State::functionCode:
+  case ParserState::functionCode:
     _checkFunctionCode();
     break;
 
-  case _State::byteCount:
+  case ParserState::byteCount:
     _checkByteCount();
     break;
 
-  case _State::dataReceive:
+  case ParserState::dataReceive:
     _receiveData();
     break;
 
-  case _State::crcLow:
+  case ParserState::crcLow:
     _checkLowCRC();
     break;
 
-  case _State::crcHigh:
+  case ParserState::crcHigh:
     _checkHighCRC();
     break;
 
@@ -125,18 +125,18 @@ Consumes tokens until slave address is found
 */
 void ModbusParser::_checkSlaveAddress() {
   if (_token == _slaveID) {
-    currentState = _State::functionCode;
+    currentState = ParserState::functionCode;
     _bytesUntilComplete--;
     _renderCRC();
   } else {
-    currentState = _State::slaveAddress;
+    currentState = ParserState::slaveAddress;
   }
 }
 
 void ModbusParser::_checkFunctionCode() {
   if (_token > 128) {
-    currentState = _State::error;
-    _errorCode = _ErrorCode::exception;
+    currentState = ParserState::error;
+    _errorCode = ErrorCode::exception;
   }
   bool fcOkay = false;
   for (uint16_t idx = 0; idx < sizeof(_supportedFunctionCodes); idx++) {
@@ -148,12 +148,12 @@ void ModbusParser::_checkFunctionCode() {
 
   if (fcOkay) {
     _functionCode = _token;
-    currentState = _State::byteCount;
+    currentState = ParserState::byteCount;
     _bytesUntilComplete--;
     _renderCRC();
   } else {
-    currentState = _State::error;
-    _errorCode = _ErrorCode::illegalFunction;
+    currentState = ParserState::error;
+    _errorCode = ErrorCode::illegalFunction;
   }
 }
 
@@ -162,12 +162,12 @@ void ModbusParser::_checkByteCount() {
     _payloadSize = _token;
     _bytesUntilComplete += _payloadSize;
     _dataToReceive = _payloadSize;
-    currentState = _State::dataReceive;
+    currentState = ParserState::dataReceive;
     _allocatePayload();
     _renderCRC();
   } else {
-    currentState = _State::error;
-    _errorCode = _ErrorCode::illegalDataValue;
+    currentState = ParserState::error;
+    _errorCode = ErrorCode::illegalDataValue;
   }
 }
 
@@ -180,7 +180,7 @@ void ModbusParser::_receiveData() {
   _bytesUntilComplete--; 
   _dataToReceive--;
   if (_dataToReceive == 0) {
-    currentState = _State::crcLow;
+    currentState = ParserState::crcLow;
   }
   _renderCRC();
 }
@@ -202,11 +202,11 @@ void ModbusParser::_reverseCopyToken(){
 
 void ModbusParser::_checkLowCRC() {
   if (lowByte(_crc) == _token) {
-    currentState = _State::crcHigh;
+    currentState = ParserState::crcHigh;
     _bytesUntilComplete--;
   } else {
-    currentState = _State::error;
-    _errorCode = _ErrorCode::CRCError;
+    currentState = ParserState::error;
+    _errorCode = ErrorCode::CRCError;
   }
 }
 
@@ -216,16 +216,16 @@ void ModbusParser::_checkHighCRC() {
     
     // proof of concept.
     if (!_bytesUntilComplete){
-      currentState = _State::complete;
+      currentState = ParserState::complete;
     } else {
       // this would mean that implementation is wrong.
       // because all other cases would cause a CRC error.
-      currentState = _State::error;
-      _errorCode = _ErrorCode::illegalDataValue;
+      currentState = ParserState::error;
+      _errorCode = ErrorCode::illegalDataValue;
     }
   } else {
-    currentState = _State::error;
-    _errorCode = _ErrorCode::CRCError;
+    currentState = ParserState::error;
+    _errorCode = ErrorCode::CRCError;
   }
 }
 
@@ -233,8 +233,8 @@ void ModbusParser::_reset() {
   _crc = 0xFFFF;
   _payloadSize = 0;
   _bytesUntilComplete = 4;
-  _errorCode = _ErrorCode::noError;
-  currentState = _State::slaveAddress;
+  _errorCode = ErrorCode::noError;
+  currentState = ParserState::slaveAddress;
 }
 
 void ModbusParser::_renderCRC() {

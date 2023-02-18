@@ -8,7 +8,7 @@ Uses to enums to control state and describe errors.
 #define  mbparser_h
 #include <Arduino.h>
 
-enum _State{
+enum class ParserState{
     error,
     slaveAddress,
     functionCode,
@@ -19,7 +19,7 @@ enum _State{
     complete
 };
 
-enum _ErrorCode{
+enum class ErrorCode{
     noError = 0,
     illegalFunction = 1,
     illegalDataValue = 3,
@@ -28,8 +28,8 @@ enum _ErrorCode{
     exception = 128
 };
 
-#define PARSER_COMPLETE _State::complete
-#define PARSER_ERROR _State::error
+#define PARSER_COMPLETE ParserState::complete
+#define PARSER_ERROR ParserState::error
 
 class ModbusParser;
 
@@ -41,15 +41,15 @@ class ModbusParser{
     ModbusParser(const ModbusParser&) = delete;
     ModbusParser& operator= (const ModbusParser&) = delete;
     ~ModbusParser(){_freePayload();};
-    uint16_t parse(uint8_t *buffer, uint16_t len);
-    uint16_t parse(uint8_t token);
+    ParserState parse(uint8_t *buffer, uint16_t len);
+    ParserState parse(uint8_t token);
     void free();
 
     //properties
     uint8_t functionCode(){return _functionCode;};
     uint16_t byteCount(){return _payloadSize;};
     uint16_t crcBytes(){return _crc;};
-    uint16_t errorCode(){return _errorCode;};
+    ErrorCode errorCode(){return _errorCode;};
     uint8_t *payload(){return _payloadArray;};
     uint16_t untilComplete(){return _bytesUntilComplete;};
     void setOnCompleteCB(parserCallback cb);
@@ -67,9 +67,9 @@ class ModbusParser{
 
     uint8_t _token;
     
-    _State lastState = _State::slaveAddress;
-    _State currentState = _State::slaveAddress;
-    _ErrorCode _errorCode = _ErrorCode::noError;
+    ParserState lastState = ParserState::slaveAddress;
+    ParserState currentState = ParserState::slaveAddress;
+    ErrorCode _errorCode = ErrorCode::noError;
     
     uint8_t _slaveID;
     uint8_t _functionCode;
