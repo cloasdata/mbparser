@@ -18,7 +18,7 @@
 
     void loop(){
 
-        uint16_t status;
+        ParserState status;
         // read one token
         if(Serial.available()){
             status = mbparser.parse(Serial.read());
@@ -32,7 +32,7 @@
             doRequest();
         } else if (status == PARSER_ERROR){
             Serial1.print("ERROR: ");
-            Serial1.print(mbparser.errorCode());
+            Serial1.print(static_cast<int>(mbparser.errorCode()));
             Serial1.print("\n");
             mbparser.free(); // important to free payload for next response
             doRequest();
