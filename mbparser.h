@@ -60,11 +60,11 @@ class RequestParser;
 /*
 ModbusParser Base class implements the general part of a modbus frame.
 User classes needs to implement the _handleData method. 
-The method is called when function was retrieved.
+The method is called when function code was retrieved.
 
-The parser implements BIG ENDIAN formated modbus frames.
-Optional user can swap to LITTLE ENDIAN. This makes it possible to parse
-LITTLE_ENDIAN and BIG_ENDIAN subscriber.
+The parser implements BIG ENDIAN format modbus frames.
+User can swap to LITTLE ENDIAN. This makes it possible to parse
+LITTLE_ENDIAN and BIG_ENDIAN subscribers.
 */
 template<class CB, class TChild>
 class ModbusParser{
