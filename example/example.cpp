@@ -1,7 +1,7 @@
-    //#include <mbparser>
     #include <Arduino.h>
     #include "mbparser.h"
-    ModbusParser mbparser{1};
+    
+    ResponseParser responseParser{};
 
     void doRequest(){
         uint8_t request[8] = {0x01, 0x04, 0x00, 0x00, 0x00, 0x06, 0x70, 0x08};
@@ -21,20 +21,18 @@
         ParserState status;
         // read one token
         if(Serial.available()){
-            status = mbparser.parse(Serial.read());
+            status = responseParser.parse(Serial.read());
         }
-        if (status == PARSER_COMPLETE){
-            uint8_t *payload = mbparser.payload();
+        if (status == ParserState::complete){
+            uint8_t *payload = responseParser.payload();
             Serial1.print("Payload: ");
-            for(int i=0; i<mbparser.byteCount(); i++) Serial1.print(payload[i], HEX);
+            for(int i=0; i<responseParser.byteCount(); i++) Serial1.print(payload[i], HEX);
             Serial1.print("\n");
-            mbparser.free(); // important to free payload for next response
             doRequest();
-        } else if (status == PARSER_ERROR){
+        } else if (status == ParserState::error){
             Serial1.print("ERROR: ");
-            Serial1.print(static_cast<int>(mbparser.errorCode()));
+            Serial1.print(static_cast<int>(responseParser.errorCode()));
             Serial1.print("\n");
-            mbparser.free(); // important to free payload for next response
             doRequest();
         }
 
