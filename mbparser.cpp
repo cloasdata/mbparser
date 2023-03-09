@@ -1,4 +1,9 @@
-// Implementation of ModbusParser class.
+/*
+mbparser.cpp 
+Implements concrete ModbusParser classes
+ResponseParser
+RequestParser
+*/
 #include "mbparser.h"
 #include "Stream.h"
 #include <Arduino.h>
@@ -6,7 +11,6 @@
 // ------- RESPONSE PARSER ------------
 
 ResponseParser::ResponseParser()
-// : ModbusParser()
 {}
 
 void ResponseParser::free(){
