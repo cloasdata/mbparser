@@ -15,7 +15,7 @@
         }
     }
 
-    void handleResponse(RequestParser *request){
+    void handleRequest(RequestParser *request){
         if (request->functionCode() == 0x04 && request->quantity()==40){
             send_response();
         }
@@ -25,7 +25,7 @@
         Serial.begin(9600); // slave
         Serial1.begin(9600); // debug interface
         responseParser.setSlaveID(1);
-        responseParser.setOnCompleteCB(handleResponse);
+        responseParser.setOnCompleteCB(handleRequest);
     }
 
     void loop(){

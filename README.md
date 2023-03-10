@@ -80,7 +80,7 @@ or new payload is allocated.
 ```
 
 Instead of polling parsers state one could use callbacks to handle the response/request.
-Next example demonstrate a simple modbus slave on id 1. On request complete the slave will send a 174 byte long response to the master. 
+Next example demonstrates a simple modbus slave on id 1. On request complete the slave will send a 174 byte long response to the master. 
 
 ```C++
     #include <Arduino.h>
@@ -96,7 +96,7 @@ Next example demonstrate a simple modbus slave on id 1. On request complete the 
         }
     }
 
-    void handleResponse(RequestParser *request){
+    void handleRequest(RequestParser *request){
         if (request->functionCode() == 0x04 && request->quantity()==40){
             send_response();
         } /* else ignore this frame*/
@@ -106,7 +106,7 @@ Next example demonstrate a simple modbus slave on id 1. On request complete the 
         Serial.begin(9600); // slave
         Serial1.begin(9600); // debug interface
         responseParser.setSlaveID(1);
-        responseParser.setOnCompleteCB(handleResponse);
+        responseParser.setOnCompleteCB(handleRequest);
     }
 
     void loop(){
