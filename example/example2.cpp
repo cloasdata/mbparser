@@ -16,7 +16,6 @@
     }
 
     void handleResponse(RequestParser *request){
-
         if (request->functionCode() == 0x04 && request->quantity()==40){
             send_response();
         }
