@@ -69,6 +69,7 @@ LITTLE_ENDIAN and BIG_ENDIAN subscribers.
 template<typename CB, typename TChild>
 class ModbusParser{
   public:
+    virtual ~ModbusParser() = default;
     ModbusParser(const ModbusParser&) = delete;
     ModbusParser& operator= (const ModbusParser&) = delete;
    
