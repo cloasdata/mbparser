@@ -334,11 +334,13 @@ class ResponseParser: public ModbusParser<ResponseCallback, ResponseParser>{
 
   public:
     ResponseParser();
-    void free();
+    ~ResponseParser();
     
     uint16_t byteCount(){return _payloadSize;};
     uint8_t *payload(){return _payloadArray;};
     uint16_t untilComplete(){return _bytesUntilComplete;};
+    
+    void free();
     void setSwap(bool swap){_reverse = true;};
     void setRegisterSize(uint16_t size){_registerSize=size;};
     

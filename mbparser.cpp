@@ -13,6 +13,11 @@ RequestParser
 ResponseParser::ResponseParser()
 {}
 
+ResponseParser::~ResponseParser(){
+  free();
+}
+
+
 void ResponseParser::free(){
   _freePayload();
 }
