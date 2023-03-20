@@ -66,7 +66,7 @@ The parser implements BIG ENDIAN format modbus frames.
 User can swap to LITTLE ENDIAN. This makes it possible to parse
 LITTLE_ENDIAN and BIG_ENDIAN subscribers.
 */
-template<class CB, class TChild>
+template<typename CB, typename TChild>
 class ModbusParser{
   public:
     ModbusParser(const ModbusParser&) = delete;
@@ -330,9 +330,6 @@ class ResponseParser: public ModbusParser<ResponseCallback, ResponseParser>{
     data,
   };
 
-  
-
-  
 
   public:
     ResponseParser();
