@@ -25,6 +25,20 @@ However, it was original implemented for little endian machines.
 #define BIG_ENDIAN 4321
 #endif
 
+// Protos
+class ResponseParser;
+class RequestParser;
+
+// Function Pointers
+#ifdef STD_FUNCTIONAL
+  #include <functional>
+  typedef std::function<void(ResponseParser *parser)> ResponseCallback;
+  typedef std::function<void(RequestParser *parser)> RequestCallback;
+#else
+  typedef void(*ResponseCallback)(ResponseParser *parser);
+  typedef void(*RequestCallback)(ResponseParser *parser);
+#endif
+
 // General used enums
 
 enum class ParserState{
@@ -51,11 +65,6 @@ enum class ErrorCode{
     // mbParser Exception
     CRCError = 21
 };
-
-// Prototypes
-class ResponseParser;
-class RequestParser;
-
 
 /*
 ModbusParser Base class implements the general part of a modbus frame.
@@ -323,8 +332,6 @@ class ModbusParser{
 
 };
 
-typedef std::function<void(ResponseParser *parser)> ResponseCallback;
-
 class ResponseParser: public ModbusParser<ResponseCallback, ResponseParser>{
   enum class ResponseParserState{
     byteCount,
@@ -367,8 +374,6 @@ class ResponseParser: public ModbusParser<ResponseCallback, ResponseParser>{
     void _allocatePayload();
     void _freePayload();
 };
-
-typedef std::function<void(RequestParser *parser)> RequestCallback;
 
 class RequestParser: public ModbusParser<RequestCallback, RequestParser>{
   enum class RequestParserState{

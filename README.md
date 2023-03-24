@@ -20,6 +20,10 @@ mbParser classes are typically wrapped into a modbus client or server (master or
 * ModbusParser Base Class can be extended for particular user solutions. For exampling including payload handling on byte level within the state machine
 * Uses old style C++ memory allocation via new to handle non deterministic payload of response frame
 
+## Flags
+To run the package with std functional library i.e. lambdas set compiler flag -D STD_FUNCTIONAL
+This flag shall not be set when AVR or other non std conforming compilers are used.
+
 ## Performance
 Profiling on a ESP8266 with 60 MHz gives a parser throughput of 0.5 megabyte per second. That should be far more than typical a modbus network can achieve through RTU (RS485) or even on TCP/IP.
 Profiling can be found in test section of the source code. 
