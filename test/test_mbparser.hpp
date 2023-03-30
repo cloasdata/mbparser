@@ -15,7 +15,6 @@ uint8_t BadRequestCRC[] {0x01, 0x04, 0x01, 0x31, 0x0, 0x01E, 0x20, 0xFF};
 // Basic tests
 void GivenGoodResponse_WhenParsed_ReturnComplete(){
     ResponseParser parser{};
-    Serial.printf("Size of response: %d", sizeof(parser));
     parser.setSlaveID(1);
 
     auto status = parser.parse(GoodResponse, 9);
@@ -38,7 +37,6 @@ void GivenBadResponse_WhenParsed_ReturnError(){
 void GivenGoodResponse_WhenParsed_ReturnProperties(){
     ResponseParser parser{};
     parser.setSlaveID(1);
-    //parser.setEndianness(true);
 
     parser.parse(GoodResponse, 9);
     
@@ -50,7 +48,6 @@ void GivenGoodResponse_WhenParsed_ReturnProperties(){
 
 void GivenGoodRequest_WhenParsed_ReturnComplete(){
     RequestParser parser{};
-    Serial.printf("Size of request: %d", sizeof(parser));
     parser.setSlaveID(1);
 
     auto status = parser.parse(GoodRequest, 8);
