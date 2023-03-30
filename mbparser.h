@@ -139,6 +139,14 @@ class ModbusParser{
       _endianness = v;
     }
 
+    /*
+    Sets void pointer to keep reference to third party objects.
+    Useful when working within classes and cannot use std::functional 
+    */
+    void setExtension(void* ptr){
+      _extension = ptr;
+    }
+
     //properties
     ParserState state() const {
       return _currentState;
@@ -155,6 +163,10 @@ class ModbusParser{
     ErrorCode errorCode() const {
       return _errorCode;
     };
+
+    void* getExtension(){
+      return _extension;
+    }
 
   protected:
     ModbusParser(){};
@@ -175,6 +187,9 @@ class ModbusParser{
     uint16_t _endianness{BIG_ENDIAN};
 
     uint16_t _crc{0xFFFF};
+
+    void* _extension{nullptr};
+
     virtual void _handleData() = 0;
 
 
