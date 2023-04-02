@@ -168,6 +168,10 @@ class ModbusParser{
       return _extension;
     }
 
+    uint16_t bytesUntilComplete(){
+      return _bytesUntilComplete;
+    }
+
   protected:
     ModbusParser(){};
     const uint16_t _supportedFunctionCodes[8] = {0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x15, 0x16};
