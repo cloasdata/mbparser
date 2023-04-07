@@ -411,6 +411,7 @@ class RequestParser: public ModbusParser<RequestCallback, RequestParser>{
 
     uint16_t address() const {return _address;};
     uint16_t quantity() const {return _quantity;};
+    uint8_t byteCount() const {return _byteCount;};
 
   private:
 
@@ -420,6 +421,7 @@ class RequestParser: public ModbusParser<RequestCallback, RequestParser>{
 
     uint16_t _address{0}; // should be invalid
     uint16_t _quantity{0}; // invalid
+    uint8_t _byteCount{0};
     byteToWord _wordAsm{};
 
     void _handleData();
