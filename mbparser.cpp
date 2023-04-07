@@ -113,7 +113,7 @@ RequestParser::RequestParser(){};
 void RequestParser::_handleData(){
   switch (_requestState )
   {
-  case RequestParserState::offset:
+  case RequestParserState::address:
     _parseOffset();
     break;
   
@@ -128,13 +128,13 @@ void RequestParser::_handleData(){
 }
 
 void RequestParser::_parseOffset(){
-    if (_lastRequestState == RequestParserState::offset){
+    if (_lastRequestState == RequestParserState::address){
       _wordAsm.bytes[1] = _token;
-      _offset = _endianness == BIG_ENDIAN ? (_wordAsm.word_>>8)|(_wordAsm.word_<<8) : _wordAsm.word_ ;
+      _address = _endianness == BIG_ENDIAN ? (_wordAsm.word_>>8)|(_wordAsm.word_<<8) : _wordAsm.word_ ;
       _requestState = RequestParserState::quantity;
     } else {
       _wordAsm.bytes[0] = _token;
-      _lastRequestState = RequestParserState::offset;
+      _lastRequestState = RequestParserState::address;
     }
     _renderCRC();   
 }
@@ -143,7 +143,7 @@ void RequestParser::_parseQuantity(){
   if (_lastRequestState == RequestParserState::quantity){
     _wordAsm.bytes[1] = _token;
     _quantity = _endianness == BIG_ENDIAN ? (_wordAsm.word_>>8)|(_wordAsm.word_<<8) : _wordAsm.word_;
-    _requestState = RequestParserState::offset;
+    _requestState = RequestParserState::address;
     _currentState = ParserState::firstCRC;
   } else {
     _wordAsm.bytes[0] = _token;

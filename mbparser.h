@@ -396,7 +396,7 @@ class ResponseParser: public ModbusParser<ResponseCallback, ResponseParser>{
 
 class RequestParser: public ModbusParser<RequestCallback, RequestParser>{
   enum class RequestParserState{
-    offset,
+    address,
     quantity
   };
 
@@ -409,16 +409,16 @@ class RequestParser: public ModbusParser<RequestCallback, RequestParser>{
   public:
     RequestParser();
 
-    uint16_t offset() const {return _offset;};
+    uint16_t address() const {return _address;};
     uint16_t quantity() const {return _quantity;};
 
   private:
 
 
-    RequestParserState _requestState{RequestParserState::offset};
+    RequestParserState _requestState{RequestParserState::address};
     RequestParserState _lastRequestState{RequestParserState::quantity};
 
-    uint16_t _offset{0}; // should be invalid
+    uint16_t _address{0}; // should be invalid
     uint16_t _quantity{0}; // invalid
     byteToWord _wordAsm{};
 
