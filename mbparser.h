@@ -298,7 +298,7 @@ class ModbusParser{
         _reset();
       }
       _renderStateMachine();
-      Serial.printf("T: %2X, S: %d, D: %2d, E: %d, CRC: %X\n", token, static_cast<int>(_lastState),_dataToReceive ,static_cast<int>(errorCode()), _crc);
+      //Serial.printf("T: %2X, S: %d, D: %2d, E: %d, CRC: %X\n", token, static_cast<int>(_lastState),_dataToReceive ,static_cast<int>(errorCode()), _crc);
       _handleCallbacks();
     }
     
