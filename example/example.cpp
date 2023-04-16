@@ -24,7 +24,7 @@
             status = responseParser.parse(Serial.read());
         }
         if (status == ParserState::complete){
-            uint8_t *payload = responseParser.payload();
+            uint8_t *payload = responseParser.data();
             Serial1.print("Payload: ");
             for(int i=0; i<responseParser.byteCount(); i++) Serial1.print(payload[i], HEX);
             Serial1.print("\n");
