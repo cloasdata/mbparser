@@ -244,6 +244,15 @@ void GivenResponse15_WhenParsed_ReturnProperties(){
     assert(status == ParserState::complete);
 }
 
+void GivenLongResponse_WhenParsed_ReturnWithError(){
+    ResponseParser parser{};
+    parser.setSlaveAddress(0);
+    parser.setByteCountLimit(10);
+    auto status = parser.parse(LongResponse04, 174);
+    assert(status == ParserState::error);
+    assert(parser.errorCode()==ErrorCode::illegalDataValue);
+}
+
 // Profile tests
 void profile_throughput_small(){
     Serial.print("\n\n");
@@ -325,6 +334,8 @@ void test_mbparser(){
     GivenResponse06_WhenParsed_ReturnProperties();
     printf(".");
     GivenResponse15_WhenParsed_ReturnProperties();
+    printf(".");
+    GivenLongResponse_WhenParsed_ReturnWithError();
     printf(".");
     heapSize -= ESP.getFreeHeap();
     if (heapSize >0){
