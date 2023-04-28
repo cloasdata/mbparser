@@ -145,7 +145,7 @@ class ModbusParser{
     Swaps byte order of data frames
     */
     void setSwap(bool swap){
-      _reverse = true;
+      _reverse = swap;
     };
     
     /*
@@ -487,7 +487,6 @@ class ModbusParser{
         _copyToken();
       }
       _dataToReceive--;
-      
       if (_dataToReceive == 0){
         _nextState = ParserState::firstCRC;
       }
