@@ -180,6 +180,16 @@ class ModbusParser{
       _extension = ptr;
     }
 
+    /*
+    Sets limit for payload to receive.
+    If exceeded error is indicated
+
+    The default limit is 96 bytes. 
+    */
+    void setByteCountLimit(size_t size){
+      _byteCountLimit = size;
+    }
+
     // ---GETTERS---
 
     ParserState state() const {
@@ -228,6 +238,10 @@ class ModbusParser{
 
     uint16_t dataToReceive(){
       return _dataToReceive;
+    }
+
+    size_t byteCountLimit() const {
+      return _byteCountLimit;
     }
 
     /*
@@ -285,6 +299,7 @@ class ModbusParser{
     uint16_t _swappedBytes{};
 
     void* _extension{nullptr};
+    size_t _byteCountLimit{96};
 
     /*
     Actual implementation of parse.
@@ -458,6 +473,10 @@ class ModbusParser{
       
       if (_token > 0){
         _parseByteCount();
+        if (_byteCount > _byteCountLimit){
+          _nextState = ParserState::error;
+          _errorCode = ErrorCode::illegalDataValue;
+        }
         _renderCRC();
       } else {
         _nextState = ParserState::error;
