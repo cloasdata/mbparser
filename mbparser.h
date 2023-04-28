@@ -263,7 +263,7 @@ class ModbusParser{
     virtual const ParserState* dispatch10() = 0;
 
   private:
-    const uint16_t _supportedFunctionCodes[8] = {0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x15, 0x16};
+    const uint16_t _supportedFunctionCodes[8] = {0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x0F, 0x10};
     const ParserState* _dispatchFC{nullptr};
 
     union byteToWord
@@ -320,7 +320,7 @@ class ModbusParser{
     void _renderStateMachine() {
       switch (_nextState) {
       case ParserState::slaveAddress:
-        _checkSlaveAddress();
+        _parseSlaveAddress();
         break;
       case ParserState::functionCode:
         _checkFunctionCode();
@@ -395,7 +395,7 @@ class ModbusParser{
     
     // --STATES--
 
-    void _checkSlaveAddress() {
+    void _parseSlaveAddress() {
       if (_token == _mySlaveAddress || _mySlaveAddress == 0) {
         _slaveAddress = _token;
         _nextState = ParserState::functionCode;
@@ -423,7 +423,7 @@ class ModbusParser{
     }
 
     bool isFunctionCodeSupported(uint8_t fc){
-      for (uint16_t idx = 0; idx < sizeof(_supportedFunctionCodes); idx++) {
+      for (uint16_t idx = 0; idx < 8; idx++) {
         if (fc == _supportedFunctionCodes[idx]) {
           return true;
         }
