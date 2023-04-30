@@ -244,6 +244,14 @@ class ModbusParser{
       return _byteCountLimit;
     }
 
+    bool isComplete() const {
+      return _nextState == ParserState::complete;
+    }
+
+    bool isError() const {
+      return _nextState == ParserState::error;
+    } 
+
     /*
     Frees the heap located data array.
     Can be called by user.
