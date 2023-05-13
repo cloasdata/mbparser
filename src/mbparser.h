@@ -126,6 +126,13 @@ class ModbusParser{
     };
 
     /*
+    Resets parser.
+    */
+    void reset(){
+      _reset();
+    }
+
+    /*
     Sets on complete callback.
     Is called when parser has finished one complete response frame.
     */
