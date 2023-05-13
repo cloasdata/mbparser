@@ -36,6 +36,10 @@ Profiling can be found in test section of the source code.
 * May not run with other arduino devices (not tested) or on other machines (not tested).
 * Was original developed to read from a Eastron SDM72D-M Smartmeter. But can be used for any other device to parse its response.
 
+## Installation
+At the moment the library is distrubted via git or platform.io only.
+To install it simply add ```seimen/mbparser@0.1.1``` to you platformio.ini or use platformio gui. 
+
 ## Usage / Example
 Belows example parses a response from a modbus slave on slave id 1.
 User code should typical transfer (copy) the payload to the desired format/type.
@@ -43,7 +47,7 @@ Important to know is that parser.payload() is only valid during when parse is co
 or new payload is allocated. 
 ```C++
     #include <Arduino.h>
-    #include "mbparser.h"
+    #include <mbparser.h>
     
     ResponseParser responseParser{};
 
@@ -89,7 +93,7 @@ Next example demonstrates a simple modbus slave on id 1. On request complete the
 
 ```C++
     #include <Arduino.h>
-    #include "mbparser.h"
+    #include <mbparser.h>
     
     RequestParser responseParser{};
     const uint16_t lenResponse = 174;
