@@ -39,7 +39,7 @@ class ModbusParser;
   typedef std::function<void(RequestParser *parser)> RequestCallback;
 #else
   typedef void(*ResponseCallback)(ResponseParser *parser);
-  typedef void(*RequestCallback)(ResponseParser *parser);
+  typedef void(*RequestCallback)(RequestParser *parser);
 #endif
 
 // General used enums
