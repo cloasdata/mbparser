@@ -14,8 +14,12 @@ However, it was original implemented for little endian machines.
 */
 #ifndef mbparser_h
 #define  mbparser_h
-#include <Arduino.h>
 
+#define min(a,b) (((a)<(b))?(a):(b))
+#define max(a,b) (((a)>(b))?(a):(b))
+
+#define highByte(w) (w >> 8)
+#define lowByte(w) (w & 0xFF)
 
 // Endian Literals
 #ifndef LITTLE_ENDIAN
@@ -39,7 +43,7 @@ class ModbusParser;
   typedef std::function<void(RequestParser *parser)> RequestCallback;
 #else
   typedef void(*ResponseCallback)(ResponseParser *parser);
-  typedef void(*RequestCallback)(ResponseParser *parser);
+  typedef void(*RequestCallback)(RequestParser *parser);
 #endif
 
 // General used enums
